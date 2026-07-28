@@ -3,34 +3,13 @@ import sift from 'sift';
 import { partialRight, uniqBy } from 'lodash'
 
 var starCatalogBuckets = [
-  {min: -2.00, max: 6.50, file: 'hd_mag__-2.00-6.50.json'},
-  {min: 6.50, max: 7.00, file: 'hd_mag__6.50-7.00.json'},
-  {min: 7.00, max: 7.50, file: 'hd_mag__7.00-7.50.json'},
-  {min: 7.50, max: 7.75, file: 'hd_mag__7.50-7.75.json'},
-  {min: 7.75, max: 8.00, file: 'hd_mag__7.75-8.00.json'},
-  {min: 8.00, max: 8.25, file: 'hd_mag__8.00-8.25.json'},
-  {min: 8.25, max: 8.50, file: 'hd_mag__8.25-8.50.json'},
-  {min: 8.50, max: 8.75, file: 'hd_mag__8.50-8.75.json'},
-  {min: 8.75, max: 9.00, file: 'hd_mag__8.75-9.00.json'},
-  {min: 9.00, max: 9.25, file: 'hd_mag__9.00-9.25.json'},
-  {min: 9.25, max: 9.50, file: 'hd_mag__9.25-9.50.json'},
-  {min: 9.50, max: 13.00, file: 'hd_mag__9.50-13.00.json'}
+  {min: -2.00, max: 6.50, file: 'hd_mag__-2.00-6.50.json'}
+  
 ];
 
 var promiseStarCatalogs = {
   'hd_asterisms.json': null,
-  'hd_mag__-2.00-6.50.json': null,
-  'hd_mag__6.50-7.00.json': null,
-  'hd_mag__7.00-7.50.json': null,
-  'hd_mag__7.50-7.75.json': null,
-  'hd_mag__7.75-8.00.json': null,
-  'hd_mag__8.00-8.25.json': null,
-  'hd_mag__8.25-8.50.json': null,
-  'hd_mag__8.50-8.75.json': null,
-  'hd_mag__8.75-9.00.json': null,
-  'hd_mag__9.00-9.25.json': null,
-  'hd_mag__9.25-9.50.json': null,
-  'hd_mag__9.50-13.00.json': null
+  'hd_mag__-2.00-6.50.json': null
 };
 
 var promiseAsterismCatalog;

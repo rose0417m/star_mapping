@@ -58,13 +58,24 @@
           Filter the catalog of stars.
         </p>
 
-        <label>Magnitude</label>
+        <!-- <label>Magnitude</label>
         <input v-model="filters.magnitude"
           type="range"
           min="-2.00"
           max="13.00"
           step="0.25"
-          />
+          /> -->
+          
+        <label>Magnitude</label>
+
+<input
+  v-model.number="filters.magnitude"
+  type="number"
+  min="-2.00"
+  max="6.50"
+  step="0.25"
+/>
+
 
         <h2>Asterisms</h2>
         <p class="description">

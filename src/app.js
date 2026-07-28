@@ -5,6 +5,7 @@ import * as catalogs from './catalogs';
 import project from './project';
 import './components/preview';
 import createTruncatedIcosahedronGeometry from './geometry/truncated-icosahedron';
+import createIsodistantTruncatedIcosahedronGeometry from './geometry/isodistant-ti';
 
 Vue.use(vueAsyncComputed)
 
@@ -15,10 +16,46 @@ const AVAILABLE_GEOMETRIES = {
   Octahedron: new three.OctahedronGeometry(),
   Dodecahedron: new three.DodecahedronGeometry(),
   Icosahedron: new three.IcosahedronGeometry(),
-  'Truncated Icosahedron': createTruncatedIcosahedronGeometry()
+  'Truncated Icosahedron': createTruncatedIcosahedronGeometry(),
+  'Isodistant TI': createIsodistantTruncatedIcosahedronGeometry()
 };
 
 new Vue({
+  mounted(){
+
+window.addEventListener(
+"message",
+(event)=>{
+
+
+if(event.data.type==="SELECT_CONSTELLATION"){
+
+
+let name = event.data.name;
+
+
+let selected =
+this.availableAsterisms.filter(
+(a)=>a.name.toLowerCase()
+=== name.toLowerCase()
+);
+
+
+
+if(selected.length){
+
+this.selectedAsterisms = selected;
+
+}
+
+
+}
+
+
+});
+
+
+},
   el: '#app',
   data: {
     selectedStars: [],
@@ -32,7 +69,8 @@ new Vue({
       'Octahedron',
       'Dodecahedron',
       'Icosahedron',
-      'Truncated Icosahedron'
+      'Truncated Icosahedron',
+      'Isodistant TI'
     ],
     filters: {
       magnitude: 4.75,
