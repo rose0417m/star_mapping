@@ -6,6 +6,7 @@ import project from './project';
 import './components/preview';
 import createTruncatedIcosahedronGeometry from './geometry/truncated-icosahedron';
 import createIsodistantTruncatedIcosahedronGeometry from './geometry/isodistant-ti';
+import createSphereGeometry from './geometry/sphere';
 
 Vue.use(vueAsyncComputed)
 
@@ -17,7 +18,8 @@ const AVAILABLE_GEOMETRIES = {
   Dodecahedron: new three.DodecahedronGeometry(),
   Icosahedron: new three.IcosahedronGeometry(),
   'Truncated Icosahedron': createTruncatedIcosahedronGeometry(),
-  'Isodistant TI': createIsodistantTruncatedIcosahedronGeometry()
+  'Isodistant TI': createIsodistantTruncatedIcosahedronGeometry(),
+  Sphere: createSphereGeometry()
 };
 
 new Vue({
@@ -70,7 +72,8 @@ this.selectedAsterisms = selected;
       'Dodecahedron',
       'Icosahedron',
       'Truncated Icosahedron',
-      'Isodistant TI'
+      'Isodistant TI',
+      'Sphere'
     ],
     filters: {
       magnitude: 4.75,

@@ -1,9 +1,11 @@
 import * as three from 'three';
 import Topology from './topology'
-import {getProjectedStars} from './catalogs'
+// import {getProjectedStars} from './catalogs'
+import { loadStarCatalog, loadAsterismCatalog } from './catalogs'
 import {constructHierarchicalMesh} from './geometry/hierarchical-mesh';
 import './extensions/curve-path'
 import { drawSVG } from './template'
+
 
 function o(constructor, props, children=[]) {
   let node = Object.assign(new constructor, props);
@@ -16,7 +18,26 @@ function o(constructor, props, children=[]) {
   return node;
 }
 
+const vectorFromAngles = (theta, phi) => {
+  return new three.Vector3(
+    Math.cos(phi) * Math.sin(theta),
+    Math.sin(phi),
+    Math.cos(phi) * Math.cos(theta)
+  ).normalize();
+};
+
+// export default function project(polyhedron, starQuery, asterismQuery, netOptions) {
+//   const topology = new Topology(polyhedron)
+
 export default function project(polyhedron, starQuery, asterismQuery, netOptions) {
+  if (polyhedron.userData && polyhedron.userData.isSphere) {
+    return projectSphere(
+      polyhedron,
+      starQuery,
+      asterismQuery
+    );
+  }
+
   const topology = new Topology(polyhedron)
   return getProjectedStars(
     topology,
@@ -32,6 +53,45 @@ export default function project(polyhedron, starQuery, asterismQuery, netOptions
   ))
 }
 
+const projectSphere = (sphereGeometry, starQuery, asterismQuery) => {
+  return Promise.all([
+    getProjectedSphereStars(starQuery),
+    getSphereAsterisms(asterismQuery)
+  ]).then(([stars, asterisms]) => {
+    const object = new three.Object3D();
+
+    // Sphere surface
+    const sphere = o(
+      three.Mesh,
+      {
+        userData: {
+          className: 'poly-face'
+        },
+        geometry: sphereGeometry
+      }
+    );
+
+    object.add(sphere);
+
+    // Stars
+    object.add(
+      starPointsObject(
+        stars.map(s => ({
+          point: s.point
+        }))
+      )
+    );
+
+    // Asterism lines
+    object.add(
+      asterismLinesObject(
+        asterisms
+      )
+    );
+
+    return object;
+  });
+};
 const build = (topology, projectedStars, projectedAsterisms, netOptions) => {
   let hierarchicalMesh = constructHierarchicalMesh(topology);
   let objectByPolygon = {};
@@ -135,6 +195,10 @@ const build = (topology, projectedStars, projectedAsterisms, netOptions) => {
     drawSVG(polygons, projectedStars, projectedAsterisms, netOptions)
   })
 
+  
+
+
+
   return hierarchicalMesh
 }
 
@@ -156,6 +220,25 @@ const generateRenderButton = action => {
 
   document.querySelector('#preview').appendChild(button)
 }
+
+// const generateDXFButton = action => {
+//   const existing = document.querySelector('#draw-dxf')
+//   if (existing) {
+//     existing.parentNode.removeChild(existing)
+//   }
+
+//   const button = document.createElement('button')
+//   button.id = 'draw-dxf'
+//   button.addEventListener('click', action)
+//   button.textContent = 'Draw DXF'
+//   button.style.position = 'absolute'
+//   button.style.width = '90px'
+//   button.style.margin = '2px'
+//   button.style.top = '50px'
+//   button.style.right = '20px'
+
+//   document.querySelector('#preview').appendChild(button)
+// }
 
 const starPointsObject = points => o(
   three.Points, {
