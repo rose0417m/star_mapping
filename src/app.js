@@ -100,20 +100,43 @@ this.selectedAsterisms = selected;
 
   methods: {
     updateAsterisms() {
-      return catalogs.loadAsterismCatalog({
-        $or: [
-          {
-            starCounts: {$elemMatch: {count: {$gt: 3}}}
-          },
-          {name: 'Canis Major'}
-        ]
-      }).then(
-        asterisms => {
-          this.availableAsterisms = asterisms;
-          this.selectedAsterisms = asterisms.slice();
-        }
-      );
-    },
+  return catalogs.loadAsterismCatalog({
+    name: {
+      $in: [
+        'Aquarius',
+        'Aquila',
+        'Aries',
+        'Auriga',
+        'Bootes',
+        'Cancer',
+        'Canis Major',
+        'Canis Minor',
+        'Capricornus',
+        'Carina',
+        'Centaurus',
+        'Crux',
+        'Cygnus',
+        'Eridanus',
+        'Gemini',
+        'Leo',
+        'Libra',
+        'Lyra',
+        'Orion',
+        'Pisces',
+        'Pisces Austrinus',
+        'Sagittarius',
+        'Scorpius',
+        'Taurus',
+        'Virgo'
+      ]
+    }
+  }).then(
+    asterisms => {
+      this.availableAsterisms = asterisms;
+      this.selectedAsterisms = asterisms.slice();
+    }
+  );
+},
 
     updateStars() {
       let connectedStars = [...new Set([].concat(...this.availableAsterisms.map(a => a.stars)))];
