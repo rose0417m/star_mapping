@@ -13,7 +13,7 @@ export default Vue.component('object-preview', {
 		picker: new Raycaster(),
 		wrapper: new Object3D(),
 		open: false,
-		animating: true,
+		animating: true, 
 		time: 0
 	}),
 

@@ -5,13 +5,30 @@ import circle from './shapes/circle'
 import { loadStarCatalog, loadAsterismCatalog } from './database'
 export { loadStarCatalog, loadAsterismCatalog }
 
-function vectorFromAngles(theta, phi) {
+
+export function vectorFromAngles(theta, phi) {
   return new Vector3(
     Math.cos(phi) * Math.sin(theta),
     Math.sin(phi),
     Math.cos(phi) * Math.cos(theta)
   ).normalize();
 }
+
+export const getProjectedSphereStars = starQuery => {
+  return loadStarCatalog(starQuery).then(stars => {
+    return stars.map(star => {
+      const direction = vectorFromAngles(
+        star.rightAscension,
+        star.declination
+      );
+
+      return {
+        point: direction.clone().multiplyScalar(1.01),
+        star
+      };
+    });
+  });
+};
 
 export const getProjectedStars = (topology, starQuery, asterismQuery) => (
   Promise.all([

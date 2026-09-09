@@ -1,5 +1,12 @@
+
 import { SphereGeometry } from 'three';
 
 export default function createSphereGeometry() {
-  return new SphereGeometry(1, 32, 16);
+  const geometry = new SphereGeometry(1, 64, 32);
+
+  geometry.userData = {
+    isSphere: true
+  };
+
+  return geometry;
 }

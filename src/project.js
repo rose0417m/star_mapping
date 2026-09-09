@@ -1,11 +1,16 @@
 import * as three from 'three';
 import Topology from './topology'
-// import {getProjectedStars} from './catalogs'
-import { loadStarCatalog, loadAsterismCatalog } from './catalogs'
+import {
+  getProjectedStars,
+  getProjectedSphereStars,
+  loadStarCatalog,
+  loadAsterismCatalog,
+  vectorFromAngles
+} from './catalogs'
 import {constructHierarchicalMesh} from './geometry/hierarchical-mesh';
 import './extensions/curve-path'
 import { drawSVG } from './template'
-
+import { drawSphereSVG } from './sphere-svg'
 
 function o(constructor, props, children=[]) {
   let node = Object.assign(new constructor, props);
@@ -18,18 +23,17 @@ function o(constructor, props, children=[]) {
   return node;
 }
 
-const vectorFromAngles = (theta, phi) => {
-  return new three.Vector3(
-    Math.cos(phi) * Math.sin(theta),
-    Math.sin(phi),
-    Math.cos(phi) * Math.cos(theta)
-  ).normalize();
-};
+
 
 // export default function project(polyhedron, starQuery, asterismQuery, netOptions) {
 //   const topology = new Topology(polyhedron)
 
 export default function project(polyhedron, starQuery, asterismQuery, netOptions) {
+
+  console.log('PROJECT GEOMETRY:', polyhedron);
+console.log('IS SPHERE:', polyhedron.userData && polyhedron.userData.isSphere);
+
+
   if (polyhedron.userData && polyhedron.userData.isSphere) {
     return projectSphere(
       polyhedron,
@@ -53,42 +57,107 @@ export default function project(polyhedron, starQuery, asterismQuery, netOptions
   ))
 }
 
+// const projectSphere = (sphereGeometry, starQuery, asterismQuery) => {
+//   return Promise.all([
+//     getProjectedSphereStars(starQuery),
+//     getSphereAsterisms(asterismQuery)
+//   ]).then(([stars, asterisms]) => {
+//     const object = new three.Object3D();
+
+//     // Sphere surface
+//     const sphere = o(
+//       three.Mesh,
+//       {
+//         userData: {
+//           className: 'poly-face'
+//         },
+//         geometry: sphereGeometry
+//       }
+//     );
+
+//     object.add(sphere);
+
+//     // Stars
+//     object.add(
+//       starPointsObject(
+//         stars.map(s => ({
+//           point: s.point
+//         }))
+//       )
+//     );
+
+//     // Asterism lines
+//     object.add(
+//       asterismLinesObject(
+//         asterisms
+//       )
+//     );
+
+//     return object;
+//   });
+// };
+
 const projectSphere = (sphereGeometry, starQuery, asterismQuery) => {
   return Promise.all([
-    getProjectedSphereStars(starQuery),
-    getSphereAsterisms(asterismQuery)
+    loadStarCatalog(starQuery),
+    loadAsterismCatalog(asterismQuery)
   ]).then(([stars, asterisms]) => {
+
+    const projectedStars = stars.map(star => ({
+      point: vectorFromAngles(
+        star.rightAscension,
+        star.declination
+      ).multiplyScalar(1.01),
+      star
+    }));
+
+    const projectedAsterisms = {};
+
+    asterisms.forEach(asterism => {
+      projectedAsterisms[asterism.name] = [];
+
+      for (let i = 0; i < asterism.stars.length - 1; i++) {
+        const a = projectedStars.find(
+          s => s.star.id === asterism.stars[i]
+        );
+
+        const b = projectedStars.find(
+          s => s.star.id === asterism.stars[i + 1]
+        );
+
+        if (!a || !b) continue;
+
+        projectedAsterisms[asterism.name].push(
+          a.point.clone(),
+          b.point.clone()
+        );
+      }
+    });
+
     const object = new three.Object3D();
 
-    // Sphere surface
-    const sphere = o(
-      three.Mesh,
-      {
+    object.add(
+      o(three.Mesh, {
         userData: {
           className: 'poly-face'
         },
         geometry: sphereGeometry
-      }
+      })
     );
 
-    object.add(sphere);
-
-    // Stars
     object.add(
-      starPointsObject(
-        stars.map(s => ({
-          point: s.point
-        }))
-      )
+      starPointsObject(projectedStars)
     );
 
-    // Asterism lines
     object.add(
-      asterismLinesObject(
-        asterisms
-      )
+      asterismLinesObject(projectedAsterisms)
     );
-
+ generateRenderButton(() => {
+  drawSphereSVG(
+    projectedStars,
+    projectedAsterisms
+  );
+});
     return object;
   });
 };
@@ -208,8 +277,9 @@ const generateRenderButton = action => {
     existing.parentNode.removeChild(existing)
   }
 
-  const button = document.createElement('button')
-  button.addEventListener('click', action)
+const button = document.createElement('button')
+button.id = 'draw-svg';
+button.addEventListener('click', action)
   button.textContent = 'Draw SVG'
   button.style.position = 'absolute'
   button.style.width = '90px'

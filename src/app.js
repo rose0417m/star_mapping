@@ -8,6 +8,7 @@ import createTruncatedIcosahedronGeometry from './geometry/truncated-icosahedron
 import createIsodistantTruncatedIcosahedronGeometry from './geometry/isodistant-ti';
 import createSphereGeometry from './geometry/sphere';
 
+
 Vue.use(vueAsyncComputed)
 
 
@@ -19,7 +20,13 @@ const AVAILABLE_GEOMETRIES = {
   Icosahedron: new three.IcosahedronGeometry(),
   'Truncated Icosahedron': createTruncatedIcosahedronGeometry(),
   'Isodistant TI': createIsodistantTruncatedIcosahedronGeometry(),
-  Sphere: createSphereGeometry()
+  // Sphere: createSphereGeometry()
+Sphere: (() => {
+  const geometry = createSphereGeometry();
+  geometry.userData = geometry.userData || {};
+  geometry.userData.isSphere = true;
+  return geometry;
+})()
 };
 
 new Vue({

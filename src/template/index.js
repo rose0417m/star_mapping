@@ -213,7 +213,7 @@ const render = (polygons, selectedPolygons, tabs, starPaths, asterismQuads, netO
   saveButton.textContent = 'Save'
 
   const saveLink = document.createElement('a')
-  const key = polygons.length > selectedPolygons.Length
+  const key = polygons.length > selectedPolygons.length
     ? `polygons-${selectedPolygons.map(({ polygon }) => polygon.index).join('-')}`
     : 'full'
 

@@ -30,7 +30,7 @@ export const inscribedRadius = (polygons, boundingBox, amount) => {
   return desiredEdgeLength / currentEdgeLength
 }
 
-export const cicrcumscribedRadius = (polygons, boundingBox, amount) => {
+export const circumscribedRadius = (polygons, boundingBox, amount) => {
   const desiredEdgeLength = amount / circumscribedRadiusByFaceCount[polygons.length]
   const currentEdgeLength = polygons[0].polygon.edges[0].line.distance()
 
