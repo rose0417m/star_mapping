@@ -1,0 +1,26 @@
+# Face 11 - local plate coordinates, origin at face center
+# +X: toward v0. +Y: normal x X (right-handed, viewed from outside).
+# Circumscribed circle diameter: 5cm
+# dot_diameter_mm: brighter stars get bigger dots, scaled 1.5mm-4mm
+#
+type,label,hd_id,magnitude,dot_diameter_mm,asterism,x_mm,y_mm
+vertex,v0,,,,,25.000,-0.000
+vertex,v1,,,,,7.725,23.776
+vertex,v2,,,,,-20.225,14.695
+vertex,v3,,,,,-20.225,-14.695
+vertex,v4,,,,,7.725,-23.776
+star,Shaula,158926,1.62,3.217,Scorpius,-3.763,-14.759
+star,HD158408,158408,2.7,2.174,Scorpius,-4.246,-14.327
+star,HD160578,160578,2.39,2.423,Scorpius,-4.686,-17.535
+star,HD161471,161471,2.99,1.972,Scorpius,-5.259,-19.126
+star,HD155203,155203,3.32,1.772,Scorpius,-11.813,-14.518
+star,HD152334,152334,3.62,1.615,Scorpius,-12.920,-11.018
+star,HD151890,151890,3,1.965,Scorpius,-9.353,-7.798
+star,HD151680,151680,2.29,2.511,Scorpius,-6.289,-5.151
+star,HD149438,149438,2.82,2.087,Scorpius,-3.062,1.223
+star,Antares,148478,1.06,4.000,Scorpius,-2.508,3.555
+star,HD147165,147165,2.9,2.032,Scorpius,-3.029,5.623
+star,Dschubba,143275,2.29,2.511,Scorpius,-3.881,11.557
+star,HD143018,143018,2.89,2.039,Scorpius,-6.907,9.369
+star,HD142669,142669,3.87,1.500,Scorpius,-9.686,7.528
+star,Graffias,144217,2.56,2.282,Scorpius,-0.779,12.555
